@@ -1,12 +1,8 @@
 services:
   - type: web
     name: escuela-innovadora
-    env: php
-    buildCommand: |
-      composer install --no-dev --optimize-autoloader
-      # Construir el frontend y moverlo a la carpeta pública de Laravel
-      cd frontend && npm install && npm run build && cp -r dist/* ../public/
-    startCommand: apache2-foreground
+    env: docker
+    plan: free
     envVars:
       - key: APP_KEY
         sync: false
