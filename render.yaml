@@ -19,4 +19,8 @@ services:
       - key: DB_CONNECTION
         value: sqlite
       - key: DB_DATABASE
-        value: database/database.sqlite
+        value: /data/database.sqlite
+    disk:
+      name: database-storage
+      mountPath: /data
+      sizeGB: 1
