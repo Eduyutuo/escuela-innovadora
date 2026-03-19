@@ -1,0 +1,22 @@
+services:
+  - type: web
+    name: escuela-innovadora
+    env: php
+    buildCommand: |
+      composer install --no-dev --optimize-autoloader
+      # Construir el frontend y moverlo a la carpeta pública de Laravel
+      cd frontend && npm install && npm run build && cp -r dist/* ../public/
+    startCommand: apache2-foreground
+    envVars:
+      - key: APP_KEY
+        sync: false
+      - key: APP_DEBUG
+        value: false
+      - key: APP_ENV
+        value: production
+      - key: LOG_CHANNEL
+        value: errorlog
+      - key: DB_CONNECTION
+        value: sqlite
+      - key: DB_DATABASE
+        value: database/database.sqlite
