@@ -41,8 +41,11 @@ COPY --from=frontend-build /app/frontend/dist ./public/
 RUN curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/local/bin --filename=composer
 RUN composer install --no-dev --optimize-autoloader
 
-# Crear la base de datos SQLite si no existe (para el volumen persistente)
-RUN mkdir -p /var/www/html/database && touch /var/www/html/database/database.sqlite
+# Copiar el script de inicio
+COPY start.sh /usr/local/bin/start.sh
+RUN tr -d '\r' < /usr/local/bin/start.sh > /usr/local/bin/start_unix.sh \
+    && mv /usr/local/bin/start_unix.sh /usr/local/bin/start.sh \
+    && chmod +x /usr/local/bin/start.sh
 
 # Dar permisos a storage y cache
 RUN chown -R www-data:www-data /var/www/html/storage /var/www/html/bootstrap/cache
@@ -50,5 +53,5 @@ RUN chown -R www-data:www-data /var/www/html/storage /var/www/html/bootstrap/cac
 # Puerto expuesto por Apache
 EXPOSE 80
 
-# Comando de inicio
-CMD ["apache2-foreground"]
+# Comando de inicio usando el script
+CMD ["/usr/local/bin/start.sh"]

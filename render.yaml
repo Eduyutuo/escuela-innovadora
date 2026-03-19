@@ -3,7 +3,6 @@ services:
     name: escuela-innovadora
     env: docker
     plan: free
-    preDeployCommand: php artisan migrate --force
     envVars:
       - key: APP_KEY
         sync: false
