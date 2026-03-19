@@ -3,6 +3,7 @@ services:
     name: escuela-innovadora
     env: docker
     plan: free
+    preDeployCommand: php artisan migrate --force
     envVars:
       - key: APP_KEY
         sync: false
@@ -13,10 +14,28 @@ services:
       - key: LOG_CHANNEL
         value: errorlog
       - key: DB_CONNECTION
-        value: sqlite
+        value: pgsql
+      - key: DB_HOST
+        fromDatabase:
+          name: escuela-db
+          property: host
+      - key: DB_PORT
+        fromDatabase:
+          name: escuela-db
+          property: port
       - key: DB_DATABASE
-        value: /data/database.sqlite
-    disk:
-      name: database-storage
-      mountPath: /data
-      sizeGB: 1
+        fromDatabase:
+          name: escuela-db
+          property: database
+      - key: DB_USERNAME
+        fromDatabase:
+          name: escuela-db
+          property: user
+      - key: DB_PASSWORD
+        fromDatabase:
+          name: escuela-db
+          property: password
+
+databases:
+  - name: escuela-db
+    plan: free
